@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginVertical="4dp"
+    android:layout_marginHorizontal="8dp"
+    >
+
+    <FrameLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@android:color/holo_red_dark"
+        >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginHorizontal="24dp"
+
+            android:src="@android:drawable/ic_delete"
+            android:tint="@color/black"
+
+            android:layout_gravity="center_vertical|end"
+
+            />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:translationX="-80dp"
+        android:background="@color/white"
+        >
+
+        <View
+            android:id="@+id/bg"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/black"
+            />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="80dp"
+            android:textSize="24sp"
+            android:layout_gravity="center_vertical"
+
+            android:textColor="#F03462"
+
+            tools:text="@tools:sample/full_names"
+            />
+
+    </FrameLayout>
+
+</FrameLayout>

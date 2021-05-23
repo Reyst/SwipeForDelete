@@ -1,0 +1,2 @@
+rootProject.name = "Swipe For Delete"
+include ':app'
