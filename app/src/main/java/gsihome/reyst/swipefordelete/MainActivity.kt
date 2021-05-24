@@ -1,12 +1,10 @@
 package gsihome.reyst.swipefordelete
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Canvas
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.random.Random
 
@@ -24,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         Person("Sample Text 9", Random(System.currentTimeMillis()).nextFloat()),
         Person("Sample Text 10", Random(System.currentTimeMillis()).nextFloat()),
 
-    )
+        )
     private val adapter = PersonAdapter(persons)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,42 +33,38 @@ class MainActivity : AppCompatActivity() {
 
         rv.adapter = adapter
 
+
+        val callback = object : SwipeToDeleteCallback() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+        }
+
+        ItemTouchHelper(callback).attachToRecyclerView(rv)
+
     }
 }
 
-class PersonAdapter(persons: List<Person>): RecyclerView.Adapter<PersonVH>() {
 
-    private val items = mutableListOf<Person>().apply { addAll(persons) }
+abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonVH {
-        return LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
-            .let(::PersonVH)
+    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        return false
     }
 
-    override fun onBindViewHolder(holder: PersonVH, position: Int) {
-        holder.bind(items[position])
+
+
+    override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+
+        val holder = (viewHolder as? PersonVH) ?: return
+
+        val half = (holder.itemView.right - holder.itemView.left) / 2F
+
+        Log.wtf("INSPECT", "dx: ${dX}, current: ${holder.content.translationX}")
+
+        holder.content.translationX =
+            if (dX < 0) maxOf(-half, dX)
+            else minOf(0F, dX)
+
+
+        //        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
-
-    override fun getItemCount(): Int = items.size
-
 }
-
-class PersonVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val bg = itemView.findViewById<View>(R.id.bg)
-    private val name = itemView.findViewById<TextView>(R.id.name)
-
-    fun bind(person: Person) {
-        name.text = person.name
-        bg.alpha = person.alpha
-    }
-
-}
-
-
-data class Person(
-    val name: String,
-    val alpha: Float,
-)
-
